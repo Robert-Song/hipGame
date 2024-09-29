@@ -1,0 +1,117 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    margin: 0;
+  }
+  
+  body {
+    background: #264653;
+    color: black;
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 10px;
+  }
+  
+  .button {
+    border: 3px solid black;
+    -webkit-appearance: none;
+    padding: 5px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: relative;
+    cursor: pointer;
+    color: black;
+  }
+  
+  .button:active,
+  .button.sorting {
+    top: 6px;
+  }
+  
+  .button.sorting {
+    cursor: wait;
+  }
+  
+  .button:active:after,
+  .button.sorting:after {
+    display: none;
+  }
+  
+  .button:after {
+    position: absolute;
+    height: 3px;
+    border: 3px solid black;
+    left: -3px;
+    bottom: -9px;
+    width: 100%;
+    content: "";
+  }
+  
+  .sort-button:after {
+    background: #296b63;
+  }
+  
+  .sort-button {
+    background: #2a9d8f;
+  }
+  
+  .shuffle-button {
+    background: #e76f51;
+  }
+  
+  .shuffle-button:after {
+    background: #9c6052;
+  }
+  
+  .number {
+    position: relative;
+    width: 55px;
+    height: 55px;
+    display: inline-block;
+  }
+  
+  .number .text {
+    position: absolute;
+    background: #e9c46a;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 44px;
+    border: 3px solid black;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    font-weight: bold;
+  }
+  
+  .number .shadow {
+    position: absolute;
+    background: #f4a261;
+    width: 50px;
+    height: 50px;
+    top: 5px;
+    left: 5px;
+    border-radius: 44px;
+    text-align: center;
+    line-height: 44px;
+    border: 3px solid black;
+    position: relative;
+    z-index: 5;
+  }
