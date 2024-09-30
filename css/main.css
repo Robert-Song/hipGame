@@ -1,0 +1,11 @@
+.generaltext {
+    text-align: left;
+    font-family: serif;
+    width: 60%;
+    margin: auto;
+    padding: 2%;
+    border-width: 2px;
+    border-color: black;
+    border-style: ridge;
+    background-color: whitesmoke;
+}
