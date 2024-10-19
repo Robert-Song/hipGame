@@ -14,8 +14,8 @@ export function drawCheckerboard(screen: HTMLCanvasElement, m: number, n: number
     const ctx = screen.getContext("2d")
 
     // fillRect(x, y, width, height)
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < m; j++) {
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
             ctx.fillStyle = (i + j) % 2 ? "red" : "blue";
             console.log(ctx.fillStyle);
             ctx.fillRect(i*checkerDim, j*checkerDim, checkerDim, checkerDim)
