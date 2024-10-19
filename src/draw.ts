@@ -23,3 +23,11 @@ export function drawCheckerboard(screen: HTMLCanvasElement, m: number, n: number
     }
 
 }
+
+// Is the canvas's click event handler
+export function getClickOnCheckerboard(x: number, y: number, screen: HTMLCanvasElement, m: number, n: number) {
+    // checks if valid move
+    // if so, make move
+    // and draw a marker there!
+    return true;
+}
