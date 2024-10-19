@@ -1,5 +1,6 @@
-let firstName = "Robert";
+import { drawCheckerboard } from "./draw";
 
-const content_div = document.getElementById("content");
+const content_div = document.getElementById("screen") as HTMLCanvasElement;
 
-content_div.innerHTML = "<h2>Subheading</h2>";
+content_div.style.backgroundColor = "red";
+drawCheckerboard(content_div, 3, 3);

@@ -1,19 +1,4 @@
 <!DOCTYPE html>
-<head>
-    <meta charset="UTF-8">
-    <title>Bubble Sort</title>
-    <link rel="stylesheet" href="./style.css">
-</head>
-
-<body>
-    <h1 id="header">Game title</h1>
-    <div id="content"></div>
-    <div id="root"></div>
-    <script type="module" src="../out/script.js"></script>
-    <script src="../out/index.js"></script>
-</body>
-
-<!DOCTYPE html>
 <html> 
     <head>
         <meta charset="utf-8">
@@ -28,7 +13,7 @@
     </head>
     <body>
         <div class="generaltext">
-            <h1 style="padding-bottom: 0; margin-bottom: 0;">Dots and boxes</h1>
+            <!-- <h1 style="padding-bottom: 0; margin-bottom: 0;">Dots and boxes</h1>
             <div style="padding: 20px 0px">
                 <select name="player" id="player", style="height: 24px; margin: 0px 20px; padding: 0px 5px">
                     <option value="0">Human plays first</option>
@@ -46,16 +31,16 @@
                 <button id="back_button" style="font: 18px sans-serif; color: white; background-color: blue; float: right; width: 100px;">Back</button>
                 <button id="start_button" style="font: 24px sans-serif; color: white; background-color: green; display: block; width: 200px; 
                 position: relative; top: 50%; left: 50%; transform: translate(-50%, 0);">Start new game</button><br>
-            </div>
+            </div> -->
             <div style="display: flex; align-items: center; justify-content: center;">
                 <canvas id="screen" width="420" height = "420" style="border: 1px solid black; background-color: darkslategray;"></canvas><br>
             </div>
-            <div style="display: flex; margin-top: 10px; align-items: center; justify-content: center;">
+            <!-- <div style="display: flex; margin-top: 10px; align-items: center; justify-content: center;">
                 <div id="turner" style="background-color: green; font: 36px sans-serif; text-align: justify; color: white; padding: 20px; display: inline-block; margin: auto;">Your turn</div>
-            </div>
+            </div> -->
         </div>
 
-        <div class="generaltext">
+        <!-- <div class="generaltext">
             <h1>About the game</h1>
             <p>Hip is a game described by Martin Gardner in (find exact source).  Though his column asks 
                 only about the possibility of the game coming to a draw as a sort of logic exercise,
@@ -64,9 +49,9 @@
                 game remedies this, allowing players to practice both recognizing squares and playing a more 
                 elaborate strategy against a simple AI.
             </p>
-        </div>
+        </div> -->
 
-        <script src="../out/index.js"></script>
+        <script src="../out/index.js" type="module"></script>
         <script>
             const comment = "I found it useful to write some JavaScript in the main page.  Perhaps that won't be necessary."
         </script>
