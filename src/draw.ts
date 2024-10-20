@@ -30,7 +30,7 @@ export function getClickOnCheckerboard(the_board: Board, x: number, y: number, s
     const c = screen.height / the_board.n;
     const i = Math.trunc(x / c);
     const j = Math.trunc(y / c);
-    if (the_board.move_valid(i, j)) {
+    if (the_board.is_empty(i, j)) {
         // if so, make move
         the_board.move(i, j, true)
         // and draw a marker there!

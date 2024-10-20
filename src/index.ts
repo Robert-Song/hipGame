@@ -1,5 +1,6 @@
 import { drawCheckerboard, getClickOnCheckerboard } from "./draw.js";
 import { Board } from "./board.js"
+
 const content_div = document.getElementById("screen") as HTMLCanvasElement;
 const row_input = document.getElementById("x_c") as HTMLInputElement;
 const column_input = document.getElementById("y_c") as HTMLInputElement;
