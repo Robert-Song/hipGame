@@ -73,14 +73,16 @@ export class Board {
                         if(j+x < this.n && j_new+x < this.n) {
                             if(this.contents[i + y][j + x] == marker 
                                 && this.contents[i_new + y][j_new + x] == marker) {
-                                    console.log("square found!");
+                                    console.log("square found! 1");
+                                    console.log(i, j);
                                     return true;
                             }
                         }
                         if(j-x >= 0 && j_new-x >= 0) {
                             if(this.contents[i + y][j - x] == marker 
                                 && this.contents[i_new + y][j_new - x] == marker) {
-                                    console.log("square found!");
+                                    console.log("square found! 2");
+                                    console.log(i, j);
                                     return true;
                             }
                         }
@@ -89,14 +91,16 @@ export class Board {
                         if(j+x < this.n && j_new+x < this.n) {
                             if(this.contents[i - y][j + x] == marker 
                                 && this.contents[i_new - y][j_new + x] == marker) {
-                                    console.log("square found!");
+                                    console.log("square found! 3");
+                                    console.log(i, j);
                                     return true;
                             }
                         }
                         if(j-x >= 0 && j_new-x >= 0) {
                             if(this.contents[i - y][j - x] == marker 
                                 && this.contents[i_new - y][j_new - x] == marker) {
-                                    console.log("square found!");
+                                    console.log("square found! 4");
+                                    console.log(i, j);
                                     return true;
                             }
                         }
