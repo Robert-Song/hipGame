@@ -3,26 +3,44 @@ import { Board } from './board.js';
 export class drawManager {
     screen: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
+    indicator: HTMLDivElement;
     board: Board;
     cdim: number;
     hoveri: number;
     hoverj: number;
-    constructor(screen: HTMLCanvasElement, board: Board) {
+    player_turn: boolean;
+    constructor(screen: HTMLCanvasElement, indicator: HTMLDivElement, board: Board, player_turn: boolean) {
         this.screen = screen;
         this.ctx = this.screen.getContext("2d");
+        this.indicator = indicator;
         this.board = board
         this.cdim = Math.sqrt(screen.width * screen.height / (board.m * board.n));
         this.hoveri = -1;
         this.hoverj = -1;
+        this.player_turn = player_turn;
     }
 
-    updateDims(m: number, n: number) {
+    updateDims(m: number, n: number, player_turn: boolean) {
         // When dimensions change, update the board
         // and the screen
         this.board = new Board(m, n);
         this.cdim = Math.sqrt(this.screen.width * this.screen.height / (this.board.m * this.board.n));
         this.screen.width = this.cdim * m;
         this.screen.height = this.cdim * n;
+        this.player_turn = player_turn;
+    }
+
+    updatePlayerTurn(isPlayerTurn: boolean) {
+        if (isPlayerTurn) {
+            this.player_turn = true;
+            this.indicator.style.backgroundColor = "green"
+            this.indicator.innerHTML = "Your turn"
+        }
+        else {
+            this.player_turn = false;
+            this.indicator.style.backgroundColor = "blue"
+            this.indicator.innerHTML = "AI's turn"
+        }
     }
 
     drawCheckerboard() {
@@ -82,13 +100,20 @@ export class drawManager {
 
     // Is the canvas's click event handler
     getClick(x: number, y: number) {
-        const i = Math.trunc(x / this.cdim);
-        const j = Math.trunc(y / this.cdim);
+        if (!this.player_turn) return;
+        const i = Math.trunc(x / (this.cdim + 1));
+        const j = Math.trunc(y / (this.cdim + 1));
         if (this.board.is_empty(i, j)) {
             this.board.move(i, j, true)
             this.drawMarker(i, j, true);
-            return true;
+            this.getAIMove();
         }
         return false;
+    }
+
+    getAIMove() {
+        this.updatePlayerTurn(false);
+        const [i, j] = this.board.make_ai_move();
+        setTimeout(() => { this.drawMarker(i, j, false); this.updatePlayerTurn(true); }, 500);
     }
 }

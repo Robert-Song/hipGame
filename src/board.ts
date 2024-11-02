@@ -18,8 +18,8 @@ export class Board {
         this.max_sqr = Math.min(this.m, this.n) - 1;
 
         //initialize an mxn array, make it empty
-        for (let i = 0; i < n; i++) {
-            this.contents.push(new Array(m).fill(Space_Marker.Empty));
+        for (let i = 0; i < m; i++) {
+            this.contents.push(new Array(n).fill(Space_Marker.Empty));
         }
     }
 
