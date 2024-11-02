@@ -44,8 +44,10 @@ export class drawManager {
 
     coverTentativeMarker(i: number, j: number) {
         if (i < 0 || j < 0) return;
-        this.ctx.fillStyle = (i + j) % 2 ? "lightGreen" : "lightBlue";
-        this.ctx.fillRect(i*this.cdim, j*this.cdim, this.cdim, this.cdim)
+        if (this.board.is_empty(i, j)) {
+            this.ctx.fillStyle = (i + j) % 2 ? "lightGreen" : "lightBlue";
+            this.ctx.fillRect(i*this.cdim, j*this.cdim, this.cdim, this.cdim)
+        }
     }
 
     drawMarker(i: number, j: number, isHumanPlayer: boolean) {
