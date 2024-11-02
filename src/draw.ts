@@ -58,8 +58,8 @@ export class drawManager {
 
     updateHover(x: number, y: number) {
         // When hovering - find checker over which being hovered
-        const i = Math.trunc(x / this.cdim);
-        const j = Math.trunc(y / this.cdim);
+        const i = Math.trunc(x / (this.cdim + 1));
+        const j = Math.trunc(y / (this.cdim + 1));
         if (!(i == this.hoveri && j == this.hoverj)) { // If it's changed,
             if (this.hoveri >= 0 && this.board.is_empty(this.hoveri, this.hoverj)) {
                 this.coverTentativeMarker(this.hoveri, this.hoverj); // hide old hover (if applicable)
