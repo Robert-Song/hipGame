@@ -134,4 +134,10 @@ export class Board {
         this.check_sqr(isHumanPlayer, i, j);
     }
 
+    make_ai_move() {
+        const i = 0;
+        const j = 0;
+        return [i, j]
+    }
+
 }
