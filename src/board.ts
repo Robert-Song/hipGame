@@ -147,4 +147,37 @@ export class Board {
         return [i, j]
     }
 
+    get_weights(i: number, j: number) {
+        var weights = [];
+        for (let i = 0; i < this.m; i++) {
+            weights.push(new Array(this.n).fill(0));
+        }
+
+        var k = Math.max(0, i - j)
+        const KMAX = Math.min(this.m - 1, this.n - 1 + i - j)
+        console.log(`i: ${i}\tj: ${j}\tk: ${k}\tKMAX: ${KMAX}`)
+        while (k <= KMAX) {
+            var l = Math.max(0, j - this.m + k + 1, i + j - this.m + 1, i - k)
+            const LMAX = Math.min(this.n - 1, i + j, k + j, this.n - k + i - 1)
+            console.log(`k: ${k}\tl: ${l}\tLMAX: ${LMAX}`)
+            while (l <= LMAX) {
+                weights[k][l] += 1
+                var a = k - i
+                var b = l - j 
+                if (l + a >= this.n) console.log(`l + a >= this.n\t\tk: ${k}\tl: ${l}`);
+                if (j + a >= this.n) console.log(`j + a >= this.n\t\tk: ${k}\tl: ${l}`);
+                weights[k - b][l + a] += 1
+                weights[i - b][j + a] += 1
+
+                l++;
+            }
+
+            k++;
+        }
+
+        for (var q = 0; q < this.m; q++) {
+            console.log(weights[q])
+        }
+    }
+
 }

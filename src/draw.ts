@@ -108,6 +108,7 @@ export class drawManager {
             this.drawMarker(i, j, true);
             this.getAIMove();
         }
+        console.log(this.board.get_weights(i, j))
         return false;
     }
 
