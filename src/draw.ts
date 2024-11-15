@@ -114,7 +114,8 @@ export class drawManager {
 
     getAIMove() {
         this.updatePlayerTurn(false);
-        const [i, j] = this.board.make_ai_move();
+        const [i, j] = this.board.choose_ai_move();
+        this.board.move(i, j, false);
         setTimeout(() => { this.drawMarker(i, j, false); this.updatePlayerTurn(true); }, 500);
     }
 }

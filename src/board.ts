@@ -1,7 +1,7 @@
 enum Space_Marker {
     Empty,
     Player,
-    AI
+    AI = 3
 }
 
 export class Board {
@@ -9,6 +9,7 @@ export class Board {
     n: number; // # of items in column (length)
     contents : Array<Array<Space_Marker>>; // an array with m width and n length
     max_sqr : number; // possible maximum length of a square's edge (in real length)
+    weights: Array<Array<number>>; // reason not to move there
 
     //general constructor, makes an empty m x n 2D array
     constructor(m: number, n: number) {
@@ -21,6 +22,8 @@ export class Board {
         for (let i = 0; i < m; i++) {
             this.contents.push(new Array(n).fill(Space_Marker.Empty));
         }
+
+        this.init_weights();
     }
 
     //check if (i, j) is empty
@@ -133,14 +136,26 @@ export class Board {
         } else {
             this.contents[i][j] = Space_Marker.AI;
         }
+        // update the board weighting
+        this.update_weights(i, j, isHumanPlayer);
 
         //check for possible square formed
-        this.check_sqr(isHumanPlayer, i, j);
+        return this.check_sqr(isHumanPlayer, i, j);
     }
 
-    make_ai_move() {
-        const i = 0;
-        const j = 0;
+    choose_ai_move() {
+        var i = -1;
+        var j = -1;
+        var best = 2147483647;
+        for (let k = 0; k < this.m; ++k) {
+            for (let l = 0; l < this.n; ++l) {
+                if (this.is_empty(k, l) && this.weights[k][l] < best) {
+                    i = k;
+                    j = l;
+                    best = this.weights[k][l]
+                }
+            }
+        }
         return [i, j]
     }
 
@@ -175,6 +190,48 @@ export class Board {
         for (var q = 0; q < this.m; q++) {
             console.log(weights[q])
         }
+
+        return weights;
     }
 
+    init_weights() {
+        this.weights = [];
+        for (let i = 0; i < this.m; i++) {
+            this.weights.push(new Array(this.n).fill(0));
+        }
+
+        var new_weights : Array<Array<number>>;
+        for (let i = 0; i < this.m; i++) {
+            for (let j = 0; j < this.n; j++) {
+                new_weights = this.get_weights(i, j);
+                this.weights = this.weights.map( (col, x_ind) => {
+                    return col.map( (val, y_ind) => val + new_weights[x_ind][y_ind])
+                })
+            }
+        }
+        // for (var q = 0; q < this.m; q++) {
+        //     console.log(weights[q])
+        // }
+    }
+
+    update_weights(i: number, j: number, player: boolean) {
+        var k = Math.max(0, i - j)
+        const KMAX = Math.min(this.m - 1, this.n - 1 + i - j)
+        while (k <= KMAX) {
+            var l = Math.max(0, j - this.m + k + 1, i + j - this.m + 1, i - k)
+            const LMAX = Math.min(this.n - 1, i + j, k + j, this.n - k + i - 1)
+            while (l <= LMAX) {
+                var a = k - i
+                var b = l - j
+
+                var coords = [[i, j], [k, l], [k-b,l+a], [i-b, j+a]];
+                var corners = coords.map( (val) => this.contents[val[0]][val[1]]);
+                var mod = corners.reduce( (prev, cur) => prev as number + cur as number);
+                coords.forEach( (val) => this.weights[val[0]][val[1]] += mod);
+
+                l++;
+            }
+            k++;
+        }
+    }
 }
