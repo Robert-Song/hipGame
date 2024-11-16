@@ -22,8 +22,6 @@ export class Board {
         for (let i = 0; i < m; i++) {
             this.contents.push(new Array(n).fill(Space_Marker.Empty));
         }
-
-        this.init_weights();
     }
 
     //check if (i, j) is empty
@@ -39,6 +37,10 @@ export class Board {
         return true;
     }
     */
+
+    choose_ai_move() {
+        return [0, 0]
+    }
 
     //check if square is formed after new marker played
     //new marker's location is saved as (i_new, j_new)
@@ -87,13 +89,13 @@ export class Board {
                             if(this.contents[i + y][j - x] == marker 
                                 && this.contents[i_new + y][j_new - x] == marker) {
                                     console.log("square found! 1");
-                                    return true;
+                                    return [[i_new + y, j_new - x], [i + y, j - x], [i_new, j_new], [i, j]];
                             }
                         } else if(i-y >= 0 && i_new-y >= 0 && j+x < this.m && j_new+x < this.m) {
                             if(this.contents[i - y][j + x] == marker 
                                 && this.contents[i_new - y][j_new + x] == marker) {
                                     console.log("square found! 2");
-                                    return true;
+                                    return [[i_new - y, j_new + x], [i - y, j + x], [i_new, j_new], [i, j]];
                             }
                         }
                     } else {
@@ -101,13 +103,13 @@ export class Board {
                             if(this.contents[i + y][j + x] == marker 
                                 && this.contents[i_new + y][j_new + x] == marker) {
                                     console.log("square found! 3");
-                                    return true;
+                                    return [[i_new + y, j_new + x], [i + y, j + x], [i_new, j_new], [i, j]];
                             }
                         } else if(i-y >= 0 && i_new-y >= 0 && j-x >= 0 && j_new-x >= 0) {
                             if(this.contents[i - y][j - x] == marker 
                                 && this.contents[i_new - y][j_new - x] == marker) {
                                     console.log("square found! 4");
-                                    return true;
+                                    return [[i_new - y, j_new - x], [i - y, j - x], [i_new, j_new], [i, j]];
                             }
                         }
                     }
@@ -139,27 +141,9 @@ export class Board {
         } else {
             this.contents[i][j] = Space_Marker.AI;
         }
-        // update the board weighting
-        this.update_weights(i, j, isHumanPlayer);
 
         //check for possible square formed
         return this.check_sqr(isHumanPlayer, i, j);
-    }
-
-    choose_ai_move() {
-        var i = -1;
-        var j = -1;
-        var best = 2147483647;
-        for (let k = 0; k < this.m; ++k) {
-            for (let l = 0; l < this.n; ++l) {
-                if (this.is_empty(k, l) && this.weights[k][l] < best) {
-                    i = k;
-                    j = l;
-                    best = this.weights[k][l]
-                }
-            }
-        }
-        return [i, j]
     }
 
     get_weights(i: number, j: number) {
@@ -195,6 +179,13 @@ export class Board {
         }
 
         return weights;
+    }
+}
+
+export class WeightedBoard extends Board {
+    constructor(m: number, n: number) {
+        super(m, n);
+        this.init_weights();
     }
 
     init_weights() {
@@ -236,5 +227,43 @@ export class Board {
             }
             k++;
         }
+    }
+
+    choose_ai_move() {
+        console.log("Weighted board is choosing move.");
+        var i = -1;
+        var j = -1;
+        var best = 2147483647;
+        for (let k = 0; k < this.m; ++k) {
+            for (let l = 0; l < this.n; ++l) {
+                if (this.is_empty(k, l) && this.weights[k][l] < best) {
+                    i = k;
+                    j = l;
+                    best = this.weights[k][l]
+                }
+            }
+        }
+        return [i, j]
+    }
+
+    //add a new piece on the board
+    move(i: number, j: number, isHumanPlayer: boolean) {
+        // makes move, changes, returns if square forms
+
+        //FIXME: remove this condition before the end of project
+        if(!this.is_empty(i, j)) {
+            console.error("this should not happen");
+        }
+        
+        if(isHumanPlayer) {
+            this.contents[i][j] = Space_Marker.Player;
+        } else {
+            this.contents[i][j] = Space_Marker.AI;
+        }
+
+        this.update_weights(i, j, isHumanPlayer);
+
+        //check for possible square formed
+        return this.check_sqr(isHumanPlayer, i, j);
     }
 }

@@ -1,15 +1,16 @@
-import { Board } from './board.js';
+import { Board, WeightedBoard } from './board.js';
 
 export class drawManager {
     screen: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     indicator: HTMLDivElement;
-    board: Board;
+    board: Board | WeightedBoard;
     cdim: number;
     hoveri: number;
     hoverj: number;
     player_turn: boolean;
-    constructor(screen: HTMLCanvasElement, indicator: HTMLDivElement, board: Board, player_turn: boolean) {
+    game_over: boolean;
+    constructor(screen: HTMLCanvasElement, indicator: HTMLDivElement, board: Board | WeightedBoard, player_turn: boolean) {
         this.screen = screen;
         this.ctx = this.screen.getContext("2d");
         this.indicator = indicator;
@@ -18,29 +19,32 @@ export class drawManager {
         this.hoveri = -1;
         this.hoverj = -1;
         this.player_turn = player_turn;
+        this.game_over = false;
     }
 
-    updateDims(m: number, n: number, player_turn: boolean) {
+    updateDims(m: number, n: number, player_turn: boolean, isRecursive: boolean) {
         // When dimensions change, update the board
         // and the screen
-        this.board = new Board(m, n);
+        this.board = isRecursive ? new Board(m, n) : new WeightedBoard(m, n);
         this.cdim = Math.sqrt(this.screen.width * this.screen.height / (this.board.m * this.board.n));
         this.screen.width = this.cdim * m;
         this.screen.height = this.cdim * n;
         this.player_turn = player_turn;
+        this.game_over = false;
     }
 
-    updatePlayerTurn(isPlayerTurn: boolean) {
+    updatePlayerTurn(isPlayerTurn: boolean, isOver: boolean) {
         if (isPlayerTurn) {
             this.player_turn = true;
             this.indicator.style.backgroundColor = "green"
-            this.indicator.innerHTML = "Your turn"
+            this.indicator.innerHTML = isOver ? "AI wins" : "Your turn"
         }
         else {
             this.player_turn = false;
             this.indicator.style.backgroundColor = "blue"
-            this.indicator.innerHTML = "AI's turn"
+            this.indicator.innerHTML = isOver ? "You win!" : "AI's turn"
         }
+        this.game_over = isOver;
     }
 
     drawCheckerboard() {
@@ -78,6 +82,7 @@ export class drawManager {
 
     updateHover(x: number, y: number) {
         // When hovering - find checker over which being hovered
+        if (this.game_over || !this.player_turn) return;
         const i = Math.trunc(x / (this.cdim + 1));
         const j = Math.trunc(y / (this.cdim + 1));
         if (!(i == this.hoveri && j == this.hoverj)) { // If it's changed,
@@ -98,24 +103,41 @@ export class drawManager {
         this.hoverj = -1;
     }
 
+    drawSquare(coordinates: Array<Array<number>>, isHumanPlayer: boolean) {
+        coordinates = coordinates.map( (location) => [(location[0]+0.5)*this.cdim, (location[1]+0.5)*this.cdim])
+        this.ctx.strokeStyle = isHumanPlayer ? "darkgreen" : "darkblue"
+        this.ctx.moveTo(coordinates[3][0], coordinates[3][1]);
+        coordinates.forEach( (location) => { this.ctx.lineTo(location[0], location[1]); })
+    }
+
     // Is the canvas's click event handler
     getClick(x: number, y: number) {
-        if (!this.player_turn) return;
+        if (this.game_over || !this.player_turn) return;
         const i = Math.trunc(x / (this.cdim + 1));
         const j = Math.trunc(y / (this.cdim + 1));
         if (this.board.is_empty(i, j)) {
-            this.board.move(i, j, true)
             this.drawMarker(i, j, true);
-            this.getAIMove();
+            var coords = this.board.move(i, j, true);
+            if (coords) {
+                this.drawSquare(coords, true);
+                this.updatePlayerTurn(true, true);
+            }
+            else this.getAIMove();
         }
-        console.log(this.board.get_weights(i, j))
         return false;
     }
 
     getAIMove() {
-        this.updatePlayerTurn(false);
+        this.updatePlayerTurn(false, false);
         const [i, j] = this.board.choose_ai_move();
-        this.board.move(i, j, false);
-        setTimeout(() => { this.drawMarker(i, j, false); this.updatePlayerTurn(true); }, 500);
+        var coords = this.board.move(i, j, false);
+        setTimeout(() => { 
+            this.drawMarker(i, j, false);
+            if (coords) {
+                this.drawSquare(coords as number[][], false);
+                this.updatePlayerTurn(false, true);
+            }
+            else this.updatePlayerTurn(true, false);
+        }, 500);
     }
 }
