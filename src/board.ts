@@ -89,13 +89,13 @@ export class Board {
                             if(this.contents[i + y][j - x] == marker 
                                 && this.contents[i_new + y][j_new - x] == marker) {
                                     console.log("square found! 1");
-                                    return [[i_new + y, j_new - x], [i + y, j - x], [i_new, j_new], [i, j]];
+                                    return [[i_new + y, j_new - x], [i_new, j_new], [i, j], [i + y, j - x]];
                             }
                         } else if(i-y >= 0 && i_new-y >= 0 && j+x < this.m && j_new+x < this.m) {
                             if(this.contents[i - y][j + x] == marker 
                                 && this.contents[i_new - y][j_new + x] == marker) {
                                     console.log("square found! 2");
-                                    return [[i_new - y, j_new + x], [i - y, j + x], [i_new, j_new], [i, j]];
+                                    return [[i_new - y, j_new + x], [i_new, j_new], [i, j], [i - y, j + x]];
                             }
                         }
                     } else {
@@ -103,13 +103,13 @@ export class Board {
                             if(this.contents[i + y][j + x] == marker 
                                 && this.contents[i_new + y][j_new + x] == marker) {
                                     console.log("square found! 3");
-                                    return [[i_new + y, j_new + x], [i + y, j + x], [i_new, j_new], [i, j]];
+                                    return [[i_new + y, j_new + x], [i_new, j_new], [i, j], [i + y, j + x]];
                             }
                         } else if(i-y >= 0 && i_new-y >= 0 && j-x >= 0 && j_new-x >= 0) {
                             if(this.contents[i - y][j - x] == marker 
                                 && this.contents[i_new - y][j_new - x] == marker) {
                                     console.log("square found! 4");
-                                    return [[i_new - y, j_new - x], [i - y, j - x], [i_new, j_new], [i, j]];
+                                    return [[i_new - y, j_new - x], [i_new, j_new], [i, j], [i - y, j - x]];
                             }
                         }
                     }

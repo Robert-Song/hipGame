@@ -13,6 +13,7 @@ export class drawManager {
     constructor(screen: HTMLCanvasElement, indicator: HTMLDivElement, board: Board | WeightedBoard, player_turn: boolean) {
         this.screen = screen;
         this.ctx = this.screen.getContext("2d");
+        this.ctx.lineWidth = 12;
         this.indicator = indicator;
         this.board = board
         this.cdim = Math.sqrt(screen.width * screen.height / (board.m * board.n));
@@ -108,6 +109,7 @@ export class drawManager {
         this.ctx.strokeStyle = isHumanPlayer ? "darkgreen" : "darkblue"
         this.ctx.moveTo(coordinates[3][0], coordinates[3][1]);
         coordinates.forEach( (location) => { this.ctx.lineTo(location[0], location[1]); })
+        this.ctx.stroke();
     }
 
     // Is the canvas's click event handler
