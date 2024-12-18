@@ -10,6 +10,7 @@ export class Board {
     contents : Array<Array<Space_Marker>>; // an array with m width and n length
     max_sqr : number; // possible maximum length of a square's edge (in real length)
     weights: Array<Array<number>>; // reason not to move there
+    moves: Array<Array<number>>; // list of previous moves
 
     //general constructor, makes an empty m x n 2D array
     constructor(m: number, n: number) {
@@ -17,6 +18,7 @@ export class Board {
         this.n = n;
         this.contents = [];
         this.max_sqr = Math.min(this.m, this.n) - 1;
+        this.moves = [];
 
         //initialize an mxn array, make it empty
         for (let i = 0; i < m; i++) {
@@ -142,8 +144,22 @@ export class Board {
             this.contents[i][j] = Space_Marker.AI;
         }
 
+        this.moves.push([i, j]);
+
         //check for possible square formed
         return this.check_sqr(isHumanPlayer, i, j);
+    }
+
+    un_move() {
+        // removes last player move & the AI move that followed it
+        if (this.moves.length > 1) {
+            let last_two_moves = this.moves.slice(-2);
+            this.contents[last_two_moves[0][0]][last_two_moves[0][1]] = Space_Marker.Empty;
+            this.contents[last_two_moves[1][0]][last_two_moves[1][1]] = Space_Marker.Empty;
+            this.moves = this.moves.slice(0, -2);
+            return last_two_moves;
+        }
+        return [];
     }
 
     get_weights(i: number, j: number) {
@@ -203,12 +219,9 @@ export class WeightedBoard extends Board {
                 })
             }
         }
-        // for (var q = 0; q < this.m; q++) {
-        //     console.log(weights[q])
-        // }
     }
 
-    update_weights(i: number, j: number, player: boolean) {
+    update_weights(i: number, j: number, player: boolean, reverse: boolean = false) {
         var k = Math.max(0, i - j)
         const KMAX = Math.min(this.m - 1, this.n - 1 + i - j)
         while (k <= KMAX) {
@@ -221,6 +234,7 @@ export class WeightedBoard extends Board {
                 var coords = [[i, j], [k, l], [k-b,l+a], [i-b, j+a]];
                 var corners = coords.map( (val) => this.contents[val[0]][val[1]]);
                 var mod = corners.reduce( (prev, cur) => prev as number + cur as number);
+                if (reverse) mod *= -1;
                 coords.forEach( (val) => this.weights[val[0]][val[1]] += mod);
 
                 l++;
@@ -248,22 +262,14 @@ export class WeightedBoard extends Board {
 
     //add a new piece on the board
     move(i: number, j: number, isHumanPlayer: boolean) {
-        // makes move, changes, returns if square forms
-
-        //FIXME: remove this condition before the end of project
-        if(!this.is_empty(i, j)) {
-            console.error("this should not happen");
-        }
-        
-        if(isHumanPlayer) {
-            this.contents[i][j] = Space_Marker.Player;
-        } else {
-            this.contents[i][j] = Space_Marker.AI;
-        }
-
         this.update_weights(i, j, isHumanPlayer);
+        return super.move(i, j, isHumanPlayer);
+    }
 
-        //check for possible square formed
-        return this.check_sqr(isHumanPlayer, i, j);
+    un_move(): number[][] {
+        let r = super.un_move();
+        this.update_weights(r[0][0], r[0][1], true, true);
+        this.update_weights(r[1][0], r[1][1], false, true);
+        return r;
     }
 }

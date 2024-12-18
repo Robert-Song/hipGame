@@ -32,3 +32,6 @@ content_div.addEventListener('mouseleave', () => draw_manager.endHover());
 content_div.addEventListener('click', (e) => {
     draw_manager.getClick(e.offsetX, e.offsetY);
 } );
+
+// Back button undoes a move
+back_button.addEventListener('click', (e) => draw_manager.unMove(draw_manager.board.un_move()));
