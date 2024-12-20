@@ -1,4 +1,4 @@
-import { Board, WeightedBoard } from './board.js';
+import { Board, RecurBoard, WeightedBoard } from './board.js';
 
 export class drawManager {
     screen: HTMLCanvasElement;
@@ -25,7 +25,7 @@ export class drawManager {
     updateDims(m: number, n: number, player_turn: boolean, isRecursive: boolean) {
         // When dimensions change, update the board
         // and the screen
-        this.board = isRecursive ? new Board(m, n) : new WeightedBoard(m, n);
+        this.board = isRecursive ? new RecurBoard(m, n) : new WeightedBoard(m, n);
         this.cdim = Math.sqrt(this.screen.width * this.screen.height / (this.board.m * this.board.n));
         this.screen.width = this.cdim * m;
         this.screen.height = this.cdim * n;
