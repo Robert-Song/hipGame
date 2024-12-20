@@ -359,6 +359,9 @@ export class RecurBoard extends Board {
         
         //if that move forms a square, add that to the sqrCount and return
         if(newTempBoard.move(i, j, false) != false) {
+            if(depth == 0) {
+                sqrCount[i][j] += 99999;
+            }
             sqrCount[i][j]++;
             return;
         }
