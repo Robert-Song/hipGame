@@ -375,3 +375,20 @@ export class RecurBoard extends Board {
         
     }
 }
+
+export class RandomBoard extends Board {
+    constructor(m: number, n: number) {
+        super(m, n);
+    }
+
+    choose_ai_move(): number[] {
+        var i;
+        var j;
+        do {
+            i = Math.floor(Math.random()*this.m)
+            j = Math.floor(Math.random()*this.n)
+        } while (!(this.is_empty(i, j)));
+        console.log("Choosing a random move");
+        return [i, j]
+    }
+}

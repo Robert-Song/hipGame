@@ -22,6 +22,7 @@
                 <select name="ai" id="ai", style="height: 24px; margin: 0px 20px; padding: 0px 5px">
                     <option value="0">Weight-based AI</option>
                     <option value="1">Recursive AI</option>
+                    <option value="2">Random-choice AI</option>
                 </select>
                 <label for="x_c" style="margin-left: 10px">Columns:  </label>
                 <input id = "x_c" type="number" step="1" min="2" max="7" value="5" style="width: 30px">
@@ -29,6 +30,7 @@
                 <input id = "y_c" type="number" step="1" min="2" max="7" value="5" style="width: 30px">
                 <br>
             </div>
+            <h2 id="warning" style="visibility: hidden; text-align: center;">Start new game to apply changes</h2>
             <div>
                 <button id="back_button" style="font: 18px sans-serif; color: white; background-color: blue; float: right; width: 100px;">Back</button>
                 <button id="start_button" style="font: 24px sans-serif; color: white; background-color: green; display: block; width: 200px; 
