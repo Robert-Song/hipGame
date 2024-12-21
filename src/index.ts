@@ -15,8 +15,8 @@ const warning_indicator = document.getElementById("warning") as HTMLHeadingEleme
 // Create MANAGER object
 const draw_manager = new drawManager(content_div, turn_indicator,
     ai_type_selection.value == "2" ? new RandomBoard(parseInt(row_input.value), parseInt(column_input.value)) :
-    ai_type_selection.value == "1" ? new RecurBoard(parseInt(row_input.value), parseInt(column_input.value))
-    : new WeightedBoard(parseInt(row_input.value), parseInt(column_input.value)), 
+    ai_type_selection.value == "0" ? new WeightedBoard(parseInt(row_input.value), parseInt(column_input.value))
+    : new RecurBoard(parseInt(row_input.value), parseInt(column_input.value), parseInt(ai_type_selection.value)), 
     (plays_first_selection.value == "0"));
 draw_manager.drawCheckerboard();
 

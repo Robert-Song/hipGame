@@ -31,7 +31,7 @@ export class drawManager {
         // and the screen
         this.board_type = ai_type_selection;
         this.board = ai_type_selection == 2 ? new RandomBoard(m, n): 
-            ai_type_selection == 1 ? new RecurBoard(m, n) : new WeightedBoard(m, n);
+            ai_type_selection == 0 ? new WeightedBoard(m, n) : new RecurBoard(m, n, ai_type_selection);
         this.cdim = Math.sqrt(this.screen.width * this.screen.height / (this.board.m * this.board.n));
         this.screen.width = this.cdim * m;
         this.screen.height = this.cdim * n;
@@ -45,9 +45,7 @@ export class drawManager {
     }
 
     updatePlayerTurn(isPlayerTurn: boolean, isOver: boolean) {
-        this.turn++;
-        console.log("over: " + isOver + "turn" + this.turn);
-        
+        this.turn++;        
 
         if (isPlayerTurn) {
             this.player_turn = true;

@@ -281,10 +281,10 @@ let sqrCount = [];
 export class RecurBoard extends Board {
     maxDepth: number;
 
-    constructor(m: number, n: number) {
+    constructor(m: number, n: number, depth: number) {
         super(m, n);
         //TODO: get maxDepth from user and update it instead of just setting into 3
-        this.maxDepth = 3;
+        this.maxDepth = depth;
     }
 
     initSqrCount () {
@@ -298,7 +298,7 @@ export class RecurBoard extends Board {
 
     //XXX: -
     deepCopy() {
-        var tempBoard = new RecurBoard(this.m, this.n);
+        var tempBoard = new RecurBoard(this.m, this.n, this.maxDepth);
         tempBoard.max_sqr = Math.min(this.m, this.n) - 1;
         tempBoard.moves = this.moves.slice();
 
@@ -311,7 +311,7 @@ export class RecurBoard extends Board {
     }
 
     choose_ai_move() {
-        console.log("Recursive board is choosing move.");
+        console.log("Recursive board is choosing move with depth " + this.maxDepth);
 
         //First, duplicate the board
         var tempBoard: RecurBoard;
