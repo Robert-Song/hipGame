@@ -43,11 +43,7 @@ export class drawManager {
     updatePlayerTurn(isPlayerTurn: boolean, isOver: boolean) {
         this.turn++;
         console.log("turn:" + this.turn + "max: " + this.board.m * this.board.n);
-        if(this.turn == this.board.m * this.board.n) {
-            this.indicator.style.backgroundColor = "grey";
-            this.indicator.innerHTML = "draw";
-        }
-        else if (isPlayerTurn) {
+        if (isPlayerTurn) {
             this.player_turn = true;
             this.indicator.style.backgroundColor = "green"
             this.indicator.innerHTML = isOver ? "AI wins" : "Your turn"
@@ -56,6 +52,11 @@ export class drawManager {
             this.player_turn = false;
             this.indicator.style.backgroundColor = "blue"
             this.indicator.innerHTML = isOver ? "You win!" : "AI's turn"
+        }
+
+        if(this.turn == this.board.m * this.board.n) {
+            this.indicator.style.backgroundColor = "grey";
+            this.indicator.innerHTML = "draw";
         }
         this.game_over = isOver;
     }
@@ -151,9 +152,12 @@ export class drawManager {
     getAIMove() {
         this.updatePlayerTurn(false, false);
         const [i, j] = this.board.choose_ai_move();
-        if(i == -1 && j == -1) {
+
+        //when the board is full, choose_ai_move() returns -1, -1
+        if(i == -1 || j == -1) {
             return;
         }
+
         var coords = this.board.move(i, j, false);
         setTimeout(() => { 
             this.drawMarker(i, j, false);

@@ -381,11 +381,26 @@ export class RandomBoard extends Board {
     }
 
     choose_ai_move(): number[] {
+
+        var takenPlaces = 0;
+        for(let k = 0; k<this.m; k++) {
+            for(let l = 0; l<this.n; l++) {
+                if(!this.is_empty(k, l)) {
+                    takenPlaces++;
+                }
+            }
+        }
+        if(takenPlaces == this.m * this.n) {
+            return [-1, -1];
+        }
+
         var i;
         var j;
+
         do {
             i = Math.floor(Math.random()*this.m)
             j = Math.floor(Math.random()*this.n)
+            console.log("infinite loop check");
         } while (!(this.is_empty(i, j)));
         console.log("Choosing a random move");
         return [i, j]
