@@ -1,0 +1,37 @@
+.generaltext {
+    text-align: left;
+    font-family: serif;
+    width: 60%;
+    margin: auto;
+    padding: 2%;
+    border-width: 2px;
+    border-color: black;
+    border-style: ridge;
+    background-color: whitesmoke;
+}
+
+.controlbox {
+    padding: 20px 0px;
+    background-color: lightgray;
+    border-width: 2px;
+    border-style: outset;
+    border-radius: 10px;
+    height: fit-content;
+    margin: 15px 0px;
+}
+
+body {
+    background-color: #333;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+button {
+    border-radius: 5px;
+    color: white;
+}
+
+h1 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin-top: 0
+}
