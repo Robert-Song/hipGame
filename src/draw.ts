@@ -103,7 +103,13 @@ export class drawManager {
     }
 
     drawMarker(i: number, j: number, isHumanPlayer: boolean) {
-        this.iterateMarker(i, j, 0, 0.1, isHumanPlayer ? "darkgreen" : "darkblue");
+        this.coverTentativeMarker(i, j);
+        this.ctx.beginPath();
+        this.ctx.moveTo((i + 0.8)*this.cdim, (j + 0.5)*this.cdim);
+        this.ctx.arc((i + 0.65)*this.cdim, (j + 0.5)*this.cdim, 0.15*this.cdim, 0, 2 * Math.PI);
+        this.ctx.fillStyle = isHumanPlayer ? "darkgreen" : "darkblue";
+        this.ctx.fill();
+        this.iterateMarker(i, j, 0, Math.random()/10 + 0.05, this.ctx.fillStyle);
     }
 
     updateHover(x: number, y: number) {
