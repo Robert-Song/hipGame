@@ -128,16 +128,27 @@ export class drawManager {
         this.coverTentativeMarker(this.hoveri, this.hoverj);
         this.hoveri = -1;
         this.hoverj = -1;
+    } 
+    
+    iterateSquare(coordinates: Array<Array<number>>, portion) {
+        coordinates.forEach( (location, ind, arr) => {
+            let next = (ind == 3) ? arr[0] : arr[ind + 1];
+            let rate = [next[0] - location[0], next[1] - location[1]];
+            this.ctx.beginPath();
+            this.ctx.moveTo(location[0], location[1]);
+            this.ctx.lineTo(location[0] + portion * rate[0], location[1] + portion * rate[1]);
+            this.ctx.moveTo(next[0] - portion * rate[0], next[1] - portion * rate[1]);
+            this.ctx.lineTo(next[0], next[1]);
+            this.ctx.stroke();
+        })
+        if (portion < 0.5) requestAnimationFrame(() => { this.iterateSquare(coordinates, portion + 0.005); })
     }
 
     drawSquare(coordinates: Array<Array<number>>, isHumanPlayer: boolean) {
         coordinates = coordinates.map( (location) => [(location[0]+0.5)*this.cdim, (location[1]+0.5)*this.cdim])
         this.ctx.strokeStyle = isHumanPlayer ? "darkgreen" : "darkblue"
         this.ctx.lineWidth = this.cdim / 8;
-        this.ctx.moveTo(coordinates[3][0], coordinates[3][1]);
-        coordinates.forEach( (location) => { this.ctx.lineTo(location[0], location[1]); })
-        coordinates.push(coordinates[0])
-        this.ctx.stroke();
+        setTimeout( () => { this.iterateSquare(coordinates, 0); }, 200 );
     }
 
     unMove(r: Array<Array<number>>) {
