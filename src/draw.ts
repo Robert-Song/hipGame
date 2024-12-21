@@ -92,7 +92,6 @@ export class drawManager {
     }
 
     iterateMarker(i: number, j: number, t: number, dt: number, fillStyle: string) {
-        console.log("t: ", t, "dt: ", dt)
         this.ctx.beginPath();
         this.ctx.moveTo((i + 0.5)*this.cdim, (j + 0.5)*this.cdim);
         this.ctx.lineTo((i + 0.5 + Math.cos(t) * 0.3) * this.cdim, (j + 0.5 + Math.sin(t) * 0.3) * this.cdim);
