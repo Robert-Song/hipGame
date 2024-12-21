@@ -91,12 +91,20 @@ export class drawManager {
         }
     }
 
+    iterateMarker(i: number, j: number, t: number, dt: number, fillStyle: string) {
+        console.log("t: ", t, "dt: ", dt)
+        this.ctx.beginPath();
+        this.ctx.moveTo((i + 0.5)*this.cdim, (j + 0.5)*this.cdim);
+        this.ctx.lineTo((i + 0.5 + Math.cos(t) * 0.3) * this.cdim, (j + 0.5 + Math.sin(t) * 0.3) * this.cdim);
+        this.ctx.arc((i + 0.5)*this.cdim, (j + 0.5)*this.cdim, 0.3*this.cdim, t, t - dt, true);
+        this.ctx.arc((i + 0.5 + Math.cos(t + dt) * 0.15) * this.cdim, (j + 0.5 + Math.sin(t + dt) * 0.15) * this.cdim, 0.15*this.cdim, t + dt, t + dt + Math.PI, true);
+        this.ctx.fillStyle = fillStyle;
+        this.ctx.fill();
+        if (t > -2 * Math.PI) requestAnimationFrame(() => { this.iterateMarker(i, j, t - dt, dt, fillStyle); });
+    }
+
     drawMarker(i: number, j: number, isHumanPlayer: boolean) {
-        const myPath = new Path2D();
-        myPath.moveTo((i + 0.8)*this.cdim, (j + 0.5)*this.cdim);
-        myPath.arc((i + 0.5)*this.cdim, (j + 0.5)*this.cdim, 0.3*this.cdim, 0, 2 * Math.PI);
-        this.ctx.fillStyle = isHumanPlayer ? "darkgreen" : "darkblue"
-        this.ctx.fill(myPath);
+        this.iterateMarker(i, j, 0, 0.1, isHumanPlayer ? "darkgreen" : "darkblue");
     }
 
     updateHover(x: number, y: number) {
@@ -128,6 +136,7 @@ export class drawManager {
         this.ctx.lineWidth = this.cdim / 8;
         this.ctx.moveTo(coordinates[3][0], coordinates[3][1]);
         coordinates.forEach( (location) => { this.ctx.lineTo(location[0], location[1]); })
+        coordinates.push(coordinates[0])
         this.ctx.stroke();
     }
 
@@ -144,7 +153,7 @@ export class drawManager {
         const j = Math.trunc(y / (this.cdim + 1));
         if (this.board.is_empty(i, j)) {
             this.drawMarker(i, j, true);
-            var coords = this.board.move(i, j, true);
+            var coords = this.board.move(i, j, true); // Send move to board, get coordinates of any squares formed
             if (coords) {
                 this.drawSquare(coords, true);
                 this.updatePlayerTurn(true, true);
@@ -171,6 +180,6 @@ export class drawManager {
                 this.updatePlayerTurn(false, true);
             }
             else this.updatePlayerTurn(true, false);
-        }, 500);
+        }, 1500);
     }
 }
