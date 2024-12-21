@@ -1,4 +1,4 @@
-import { Board, RecurBoard, WeightedBoard } from './board.js';
+import { Board, RandomBoard, RecurBoard, WeightedBoard } from './board.js';
 
 export class drawManager {
     screen: HTMLCanvasElement;
@@ -30,19 +30,25 @@ export class drawManager {
         // When dimensions change, update the board
         // and the screen
         this.board_type = ai_type_selection;
-        this.board = ai_type_selection == 2 ? new RecurBoard(m, n): 
+        this.board = ai_type_selection == 2 ? new RandomBoard(m, n): 
             ai_type_selection == 1 ? new RecurBoard(m, n) : new WeightedBoard(m, n);
         this.cdim = Math.sqrt(this.screen.width * this.screen.height / (this.board.m * this.board.n));
         this.screen.width = this.cdim * m;
         this.screen.height = this.cdim * n;
-        this.player_turn = player_turn;
+        //if you choose AI plays first option, start the game with aimove()
+        if(!player_turn) {
+            this.getAIMove();
+        }
+        this.player_turn = true;
         this.game_over = false;
         this.turn = 0;
     }
 
     updatePlayerTurn(isPlayerTurn: boolean, isOver: boolean) {
         this.turn++;
-        console.log("turn:" + this.turn + "max: " + this.board.m * this.board.n);
+        console.log("over: " + isOver + "turn" + this.turn);
+        
+
         if (isPlayerTurn) {
             this.player_turn = true;
             this.indicator.style.backgroundColor = "green"
@@ -53,11 +59,12 @@ export class drawManager {
             this.indicator.style.backgroundColor = "blue"
             this.indicator.innerHTML = isOver ? "You win!" : "AI's turn"
         }
-
-        if(this.turn == this.board.m * this.board.n) {
+        //when there is no square formed and the board is full, its a draw
+        if(!isOver && this.turn == this.board.m * this.board.n) {
             this.indicator.style.backgroundColor = "grey";
             this.indicator.innerHTML = "draw";
         }
+        
         this.game_over = isOver;
     }
 

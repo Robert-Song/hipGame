@@ -382,6 +382,7 @@ export class RandomBoard extends Board {
 
     choose_ai_move(): number[] {
 
+        //when the board is full, while loop will become an infinite loop
         var takenPlaces = 0;
         for(let k = 0; k<this.m; k++) {
             for(let l = 0; l<this.n; l++) {
@@ -400,7 +401,6 @@ export class RandomBoard extends Board {
         do {
             i = Math.floor(Math.random()*this.m)
             j = Math.floor(Math.random()*this.n)
-            console.log("infinite loop check");
         } while (!(this.is_empty(i, j)));
         console.log("Choosing a random move");
         return [i, j]
