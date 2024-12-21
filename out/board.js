@@ -284,8 +284,8 @@ export class RecurBoard extends Board {
             }
         }
         //traverse the sqrCount[][] and find the least possible square formed spot, return that
-        var i = 0;
-        var j = 0;
+        var i = -1;
+        var j = -1;
         var best = 2147483647;
         for (let k = 0; k < this.m; k++) {
             for (let l = 0; l < this.n; l++) {
@@ -312,7 +312,7 @@ export class RecurBoard extends Board {
         //if that move forms a square, add that to the sqrCount and return
         if (newTempBoard.move(i, j, false) != false) {
             if (depth == 0) {
-                sqrCount[i][j] += 99999;
+                sqrCount[i][j] += 999;
             }
             sqrCount[i][j]++;
             return;
@@ -323,5 +323,20 @@ export class RecurBoard extends Board {
                 this.recurChild(newTempBoard, depth + 1, k, l);
             }
         }
+    }
+}
+export class RandomBoard extends Board {
+    constructor(m, n) {
+        super(m, n);
+    }
+    choose_ai_move() {
+        var i;
+        var j;
+        do {
+            i = Math.floor(Math.random() * this.m);
+            j = Math.floor(Math.random() * this.n);
+        } while (!(this.is_empty(i, j)));
+        console.log("Choosing a random move");
+        return [i, j];
     }
 }

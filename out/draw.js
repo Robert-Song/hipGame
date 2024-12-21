@@ -4,25 +4,36 @@ export class drawManager {
         this.screen = screen;
         this.ctx = this.screen.getContext("2d");
         this.indicator = indicator;
+        this.board_type = 0;
         this.board = board;
         this.cdim = Math.sqrt(screen.width * screen.height / (board.m * board.n));
         this.hoveri = -1;
         this.hoverj = -1;
         this.player_turn = player_turn;
         this.game_over = false;
+        this.turn = 0;
     }
-    updateDims(m, n, player_turn, isRecursive) {
+    updateDims(m, n, player_turn, ai_type_selection) {
         // When dimensions change, update the board
         // and the screen
-        this.board = isRecursive ? new RecurBoard(m, n) : new WeightedBoard(m, n);
+        this.board_type = ai_type_selection;
+        this.board = ai_type_selection == 2 ? new RecurBoard(m, n) :
+            ai_type_selection == 1 ? new RecurBoard(m, n) : new WeightedBoard(m, n);
         this.cdim = Math.sqrt(this.screen.width * this.screen.height / (this.board.m * this.board.n));
         this.screen.width = this.cdim * m;
         this.screen.height = this.cdim * n;
         this.player_turn = player_turn;
         this.game_over = false;
+        this.turn = 0;
     }
     updatePlayerTurn(isPlayerTurn, isOver) {
-        if (isPlayerTurn) {
+        this.turn++;
+        console.log("turn:" + this.turn + "max: " + this.board.m * this.board.n);
+        if (this.turn == this.board.m * this.board.n) {
+            this.indicator.style.backgroundColor = "grey";
+            this.indicator.innerHTML = "draw";
+        }
+        else if (isPlayerTurn) {
             this.player_turn = true;
             this.indicator.style.backgroundColor = "green";
             this.indicator.innerHTML = isOver ? "AI wins" : "Your turn";
@@ -121,6 +132,9 @@ export class drawManager {
     getAIMove() {
         this.updatePlayerTurn(false, false);
         const [i, j] = this.board.choose_ai_move();
+        if (i == -1 && j == -1) {
+            return;
+        }
         var coords = this.board.move(i, j, false);
         setTimeout(() => {
             this.drawMarker(i, j, false);

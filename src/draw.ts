@@ -11,6 +11,7 @@ export class drawManager {
     hoverj: number;
     player_turn: boolean;
     game_over: boolean;
+    turn : number;
     constructor(screen: HTMLCanvasElement, indicator: HTMLDivElement, board: Board, player_turn: boolean) {
         this.screen = screen;
         this.ctx = this.screen.getContext("2d");
@@ -22,6 +23,7 @@ export class drawManager {
         this.hoverj = -1;
         this.player_turn = player_turn;
         this.game_over = false;
+        this.turn = 0;
     }
 
     updateDims(m: number, n: number, player_turn: boolean, ai_type_selection: number) {
@@ -35,10 +37,17 @@ export class drawManager {
         this.screen.height = this.cdim * n;
         this.player_turn = player_turn;
         this.game_over = false;
+        this.turn = 0;
     }
 
     updatePlayerTurn(isPlayerTurn: boolean, isOver: boolean) {
-        if (isPlayerTurn) {
+        this.turn++;
+        console.log("turn:" + this.turn + "max: " + this.board.m * this.board.n);
+        if(this.turn == this.board.m * this.board.n) {
+            this.indicator.style.backgroundColor = "grey";
+            this.indicator.innerHTML = "draw";
+        }
+        else if (isPlayerTurn) {
             this.player_turn = true;
             this.indicator.style.backgroundColor = "green"
             this.indicator.innerHTML = isOver ? "AI wins" : "Your turn"
@@ -142,6 +151,9 @@ export class drawManager {
     getAIMove() {
         this.updatePlayerTurn(false, false);
         const [i, j] = this.board.choose_ai_move();
+        if(i == -1 && j == -1) {
+            return;
+        }
         var coords = this.board.move(i, j, false);
         setTimeout(() => { 
             this.drawMarker(i, j, false);

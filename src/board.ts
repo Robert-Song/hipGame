@@ -328,8 +328,8 @@ export class RecurBoard extends Board {
         }
 
         //traverse the sqrCount[][] and find the least possible square formed spot, return that
-        var i = 0;
-        var j = 0;
+        var i = -1;
+        var j = -1;
         var best = 2147483647;
         for(let k=0; k<this.m; k++) {
             for(let l=0; l<this.n; l++) {
@@ -340,7 +340,6 @@ export class RecurBoard extends Board {
                 }
             }
         }
-
         return [i, j];
     }
 
@@ -360,7 +359,7 @@ export class RecurBoard extends Board {
         //if that move forms a square, add that to the sqrCount and return
         if(newTempBoard.move(i, j, false) != false) {
             if(depth == 0) {
-                sqrCount[i][j] += 99999;
+                sqrCount[i][j] += 999;
             }
             sqrCount[i][j]++;
             return;
