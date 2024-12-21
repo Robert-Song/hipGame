@@ -55,47 +55,46 @@ export class Board {
                     continue;
                 }
                 //square length
-                let x = i - i_new;
-                let y = j - j_new;
+                let x = j - j_new;
+                let y = i - i_new;
                 //used to check conditions
                 let slope = 1; //positive slope
-                //(negative shaped, but in 2D array representation, it is positive)
-                if (x * y < 0) {
-                    slope = 0;
+                if (x * y > 0) {
+                    slope = 0; //negative slope
                 }
                 x = Math.abs(x);
                 y = Math.abs(y);
                 //FIXME: remove try catch after debugging!!!
                 try {
-                    if (slope) {
-                        if (i + y < this.n && i_new + y < this.n && j - x >= 0 && j_new - x >= 0) {
-                            if (this.contents[i + y][j - x] == marker
-                                && this.contents[i_new + y][j_new - x] == marker) {
-                                //console.log("square found! 1");
-                                return [[i_new + y, j_new - x], [i_new, j_new], [i, j], [i + y, j - x]];
+                    if (slope == 0) {
+                        if (i + x < this.n && i_new + x < this.n && j - y >= 0 && j_new - y >= 0) {
+                            if (this.contents[i + x][j - y] == marker
+                                && this.contents[i_new + x][j_new - y] == marker) {
+                                console.log("square found! 1");
+                                return [[i_new + x, j_new - y], [i_new, j_new], [i, j], [i + x, j - y]];
                             }
                         }
-                        else if (i - y >= 0 && i_new - y >= 0 && j + x < this.m && j_new + x < this.m) {
-                            if (this.contents[i - y][j + x] == marker
-                                && this.contents[i_new - y][j_new + x] == marker) {
-                                //console.log("square found! 2");
-                                return [[i_new - y, j_new + x], [i_new, j_new], [i, j], [i - y, j + x]];
+                        if (i - x >= 0 && i_new - x >= 0 && j + y < this.m && j_new + y < this.m) {
+                            if (this.contents[i - x][j + y] == marker
+                                && this.contents[i_new - x][j_new + y] == marker) {
+                                console.log("square found! 2");
+                                return [[i_new - x, j_new + y], [i_new, j_new], [i, j], [i - x, j + y]];
                             }
                         }
                     }
                     else {
-                        if (i + y < this.n && i_new + y < this.n && j + x < this.m && j_new + x < this.m) {
-                            if (this.contents[i + y][j + x] == marker
-                                && this.contents[i_new + y][j_new + x] == marker) {
-                                //console.log("square found! 3");
-                                return [[i_new + y, j_new + x], [i_new, j_new], [i, j], [i + y, j + x]];
+                        if (i + x < this.n && i_new + x < this.n && j + y < this.m && j_new + y < this.m) {
+                            if (this.contents[i + x][j + y] == marker
+                                && this.contents[i_new + x][j_new + y] == marker) {
+                                console.log("square found! 3");
+                                return [[i_new + x, j_new + y], [i_new, j_new], [i, j], [i + x, j + y]];
                             }
                         }
-                        else if (i - y >= 0 && i_new - y >= 0 && j - x >= 0 && j_new - x >= 0) {
-                            if (this.contents[i - y][j - x] == marker
-                                && this.contents[i_new - y][j_new - x] == marker) {
-                                //console.log("square found! 4");
-                                return [[i_new - y, j_new - x], [i_new, j_new], [i, j], [i - y, j - x]];
+                        if (i - x >= 0 && i_new - x >= 0 && j - y >= 0 && j_new - y >= 0) {
+                            if (this.contents[i - x][j - y] == marker
+                                && this.contents[i_new - x][j_new - y] == marker) {
+                                console.log("square found! 4");
+                                return [[i_new - x, j_new - y], [i_new, j_new], [i, j], [i - x, j - y]];
                             }
                         }
                     }
