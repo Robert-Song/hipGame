@@ -4,16 +4,18 @@ export class drawManager {
     screen: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     indicator: HTMLDivElement;
-    board: Board | WeightedBoard;
+    board: Board;
+    board_type: number;
     cdim: number;
     hoveri: number;
     hoverj: number;
     player_turn: boolean;
     game_over: boolean;
-    constructor(screen: HTMLCanvasElement, indicator: HTMLDivElement, board: Board | WeightedBoard, player_turn: boolean) {
+    constructor(screen: HTMLCanvasElement, indicator: HTMLDivElement, board: Board, player_turn: boolean) {
         this.screen = screen;
         this.ctx = this.screen.getContext("2d");
         this.indicator = indicator;
+        this.board_type = 0;
         this.board = board
         this.cdim = Math.sqrt(screen.width * screen.height / (board.m * board.n));
         this.hoveri = -1;
@@ -22,10 +24,12 @@ export class drawManager {
         this.game_over = false;
     }
 
-    updateDims(m: number, n: number, player_turn: boolean, isRecursive: boolean) {
+    updateDims(m: number, n: number, player_turn: boolean, ai_type_selection: number) {
         // When dimensions change, update the board
         // and the screen
-        this.board = isRecursive ? new RecurBoard(m, n) : new WeightedBoard(m, n);
+        this.board_type = ai_type_selection;
+        this.board = ai_type_selection == 2 ? new RecurBoard(m, n): 
+            ai_type_selection == 1 ? new RecurBoard(m, n) : new WeightedBoard(m, n);
         this.cdim = Math.sqrt(this.screen.width * this.screen.height / (this.board.m * this.board.n));
         this.screen.width = this.cdim * m;
         this.screen.height = this.cdim * n;
