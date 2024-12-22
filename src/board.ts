@@ -1,7 +1,7 @@
 enum Space_Marker {
     Empty,
-    Player,
-    AI = 3
+    Player = 2,
+    AI = 6
 }
 
 export class Board {
@@ -234,13 +234,20 @@ export class WeightedBoard extends Board {
 
                 var coords = [[i, j], [k, l], [k-b,l+a], [i-b, j+a]];
                 var corners = coords.map( (val) => this.contents[val[0]][val[1]]);
-                var mod = corners.reduce( (prev, cur) => prev as number + cur as number);
+                var mod = corners.reduce( (prev, cur) => prev as number + cur as number) as number;
+                if (mod == 3 * Space_Marker.AI) mod = 120;
+                else if (corners.indexOf(Space_Marker.AI) >= 0 && corners.indexOf(Space_Marker.Player) >= 0) {
+                    mod = -3;
+                }
                 if (reverse) mod *= -1;
                 coords.forEach( (val) => this.weights[val[0]][val[1]] += mod);
 
                 l++;
             }
             k++;
+        }
+        for (var q = 0; q < this.m; q++) {
+            console.log(this.weights[q])
         }
     }
 
@@ -263,8 +270,9 @@ export class WeightedBoard extends Board {
 
     //add a new piece on the board
     move(i: number, j: number, isHumanPlayer: boolean) {
+        let m = super.move(i, j, isHumanPlayer);
         this.update_weights(i, j, isHumanPlayer);
-        return super.move(i, j, isHumanPlayer);
+        return m;
     }
 
     un_move(): number[][] {

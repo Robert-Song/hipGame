@@ -91,12 +91,25 @@ export class drawManager {
         }
     }
 
+    iterateMarker(i: number, j: number, t: number, dt: number, fillStyle: string) {
+        this.ctx.beginPath();
+        this.ctx.moveTo((i + 0.5)*this.cdim, (j + 0.5)*this.cdim);
+        this.ctx.lineTo((i + 0.5 + Math.cos(t) * 0.3) * this.cdim, (j + 0.5 + Math.sin(t) * 0.3) * this.cdim);
+        this.ctx.arc((i + 0.5)*this.cdim, (j + 0.5)*this.cdim, 0.3*this.cdim, t, t - dt, true);
+        this.ctx.arc((i + 0.5 + Math.cos(t + dt) * 0.15) * this.cdim, (j + 0.5 + Math.sin(t + dt) * 0.15) * this.cdim, 0.15*this.cdim, t + dt, t + dt + Math.PI, true);
+        this.ctx.fillStyle = fillStyle;
+        this.ctx.fill();
+        if (t > -2 * Math.PI) requestAnimationFrame(() => { this.iterateMarker(i, j, t - dt, dt, fillStyle); });
+    }
+
     drawMarker(i: number, j: number, isHumanPlayer: boolean) {
-        const myPath = new Path2D();
-        myPath.moveTo((i + 0.8)*this.cdim, (j + 0.5)*this.cdim);
-        myPath.arc((i + 0.5)*this.cdim, (j + 0.5)*this.cdim, 0.3*this.cdim, 0, 2 * Math.PI);
-        this.ctx.fillStyle = isHumanPlayer ? "darkgreen" : "darkblue"
-        this.ctx.fill(myPath);
+        this.coverTentativeMarker(i, j);
+        this.ctx.beginPath();
+        this.ctx.moveTo((i + 0.8)*this.cdim, (j + 0.5)*this.cdim);
+        this.ctx.arc((i + 0.65)*this.cdim, (j + 0.5)*this.cdim, 0.15*this.cdim, 0, 2 * Math.PI);
+        this.ctx.fillStyle = isHumanPlayer ? "darkgreen" : "darkblue";
+        this.ctx.fill();
+        this.iterateMarker(i, j, 0, Math.random()/10 + 0.05, this.ctx.fillStyle);
     }
 
     updateHover(x: number, y: number) {
@@ -120,15 +133,27 @@ export class drawManager {
         this.coverTentativeMarker(this.hoveri, this.hoverj);
         this.hoveri = -1;
         this.hoverj = -1;
+    } 
+    
+    iterateSquare(coordinates: Array<Array<number>>, portion) {
+        coordinates.forEach( (location, ind, arr) => {
+            let next = (ind == 3) ? arr[0] : arr[ind + 1];
+            let rate = [next[0] - location[0], next[1] - location[1]];
+            this.ctx.beginPath();
+            this.ctx.moveTo(location[0], location[1]);
+            this.ctx.lineTo(location[0] + portion * rate[0], location[1] + portion * rate[1]);
+            this.ctx.moveTo(next[0] - portion * rate[0], next[1] - portion * rate[1]);
+            this.ctx.lineTo(next[0], next[1]);
+            this.ctx.stroke();
+        })
+        if (portion < 0.5) requestAnimationFrame(() => { this.iterateSquare(coordinates, portion + 0.005); })
     }
 
     drawSquare(coordinates: Array<Array<number>>, isHumanPlayer: boolean) {
         coordinates = coordinates.map( (location) => [(location[0]+0.5)*this.cdim, (location[1]+0.5)*this.cdim])
         this.ctx.strokeStyle = isHumanPlayer ? "darkgreen" : "darkblue"
         this.ctx.lineWidth = this.cdim / 8;
-        this.ctx.moveTo(coordinates[3][0], coordinates[3][1]);
-        coordinates.forEach( (location) => { this.ctx.lineTo(location[0], location[1]); })
-        this.ctx.stroke();
+        setTimeout( () => { this.iterateSquare(coordinates, 0); }, 200 );
     }
 
     unMove(r: Array<Array<number>>) {
@@ -144,7 +169,7 @@ export class drawManager {
         const j = Math.trunc(y / (this.cdim + 1));
         if (this.board.is_empty(i, j)) {
             this.drawMarker(i, j, true);
-            var coords = this.board.move(i, j, true);
+            var coords = this.board.move(i, j, true); // Send move to board, get coordinates of any squares formed
             if (coords) {
                 this.drawSquare(coords, true);
                 this.updatePlayerTurn(true, true);
@@ -171,6 +196,6 @@ export class drawManager {
                 this.updatePlayerTurn(false, true);
             }
             else this.updatePlayerTurn(true, false);
-        }, 500);
+        }, 1500);
     }
 }
